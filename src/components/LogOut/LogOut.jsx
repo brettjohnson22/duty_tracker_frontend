@@ -1,11 +1,12 @@
 import { useEffect } from "react"
+import { useAuth } from '../../hooks/useAuth'
 
 
 const LogOut = () => {
-
+    const {auth, logout} = useAuth();
 
     useEffect(() => {
-        localStorage.clear();
+        logout();
     }, [])
 
     return(

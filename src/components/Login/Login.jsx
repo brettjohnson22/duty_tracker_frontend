@@ -1,12 +1,16 @@
 import { Container, Form, Button } from 'react-bootstrap';
 import axios from 'axios'
 import useInput from '../../hooks/useInput';
+import { useAuth}  from '../../hooks/useAuth'
+import { useNavigate } from 'react-router-dom';
 
 
-const Login = () => {
+const Login = ({setAuthed}) => {
 
     const [username, setUserName] = useInput('');
     const [password, setPassword] = useInput('');
+    const { login } = useAuth();
+    const navigate = useNavigate();
 
     const handleSubmit = async(e) => {
         e.preventDefault();
@@ -14,9 +18,14 @@ const Login = () => {
             'username': username,
             'password': password,
         }
-        let res = await axios.post('http://127.0.0.1:8000/api/auth/login/', user)
-        localStorage.setItem("token", res.data.access);
-        window.location = "/";
+        try{
+            await login(user);
+            setAuthed(true)
+            navigate("/");
+        }
+        catch(err){
+            console.log('login error', err)
+        }
     }
 
     return(
